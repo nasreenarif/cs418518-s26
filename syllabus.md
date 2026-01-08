@@ -1,6 +1,6 @@
 # CS418/518: Web Programming Syllabus – Spring 2026
 
-[Jump to Summary Schedule](#summary-schedule) | [Download printable PDF version](syllabus.pdf)
+[Jump to Summary Schedule](#summary-schedule) | [Download printable PDF version](https://github.com/nasreenarif/cs418518-s26/blob/main/syllabus.pdf)
 
 ## Course Overview
 
