@@ -1,0 +1,33 @@
+.header-nav {
+  display: flex;
+  justify-content: flex-end;   /* Align to right */
+  align-items: center;
+  padding: 20px 40px;
+  background-color: #f8f9fa;
+  margin: 20px;
+}
+
+.header-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  margin: 0;
+  padding: 0;
+}
+
+.header-nav a {
+  text-decoration: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  padding: 8px 12px;
+  transition: 0.3s ease;
+}
+
+.header-nav a:hover {
+  color: #007bff;
+}
+
+.header-nav a.active {
+  border-bottom: 3px solid #007bff;
+}

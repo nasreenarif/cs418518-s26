@@ -1,13 +1,10 @@
-import { useState } from 'react';
+import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import './App.css';
-import Image from './Image';
-import UserInfo from './UserInfo';
-import Signup from './Signup';
-
+import Dashboard from "./Dashboard.jsx";
+import Header from "./Header.jsx";
+import Login from "./Login.jsx";
+import Signup from "./Signup.jsx";
 function App() {
-  // const [count, setCount] = useState(1)
-    const [submittedUser, setSubmittedUser] = useState(null);
-
 
   return (
     <>
@@ -29,7 +26,18 @@ function App() {
       <UserInfo name="Sara" course="CS518" ></UserInfo>
       <UserInfo name="John" course="Cs471" ></UserInfo>
       <UserInfo >This is userinfo</UserInfo> */}
-      <Signup onRegister={(user) => setSubmittedUser(user)} />
+      {/* <Signup onRegister={(user) => setSubmittedUser(user)} /> */}
+
+      <Router>
+        <Header />
+        <main>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />        
+            <Route path="/dashboard" element={<Dashboard />} />
+          </Routes>
+        </main>
+      </Router>
     </>
   )
 }

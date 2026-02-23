@@ -1,0 +1,107 @@
+/* ============================
+   Login Component Styles
+   ============================ */
+
+#login {
+    max-width: 620px;
+    margin: 0 auto;
+    padding: 26px 30px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 8px 22px rgba(0, 0, 0, 0.08);
+    color: #1f2937;
+}
+
+/* Form layout */
+.controls {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 14px;
+}
+
+/* Remove default <p> spacing so spacing matches Signup groups */
+.controls p {
+    margin: 0;
+}
+
+/* Labels */
+.controls label {
+    display: block;
+    margin-bottom: 6px;
+    font-weight: 600;
+    color: #374151;
+    font-size: 15px;
+    letter-spacing: normal;
+    text-transform: none;
+}
+
+/* Inputs */
+.controls input {
+    width: 100%;
+    padding: 10px 12px;
+    font-size: 15px;
+    border-radius: 6px;
+    border: 1px solid #d1d5db;
+    background-color: #ffffff;
+    color: #374151;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: none;
+}
+
+.controls input:focus {
+    outline: none;
+    border-color: #2563eb;
+    box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+}
+
+/* Error state (consistent with signup-input.error + signup-error color) */
+label.invalid {
+    color: #dc2626;
+}
+
+input.invalid {
+    border-color: #dc2626;
+    background-color: #ffffff;
+    color: #374151;
+}
+
+/* Actions row */
+.actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+/* Buttons: match signup-btn styling */
+.button {
+    padding: 12px 16px;
+    background-color: #2563eb;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+    text-transform: none;
+}
+
+.button:hover {
+    background-color: #1e40af;
+}
+
+.button:active {
+    transform: scale(0.98);
+}
+
+/* Optional: make the first button look like a secondary action */
+.actions .button:first-child {
+    background-color: #e5e7eb;
+    color: #111827;
+}
+
+.actions .button:first-child:hover {
+    background-color: #d1d5db;
+}
