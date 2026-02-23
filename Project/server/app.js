@@ -1,3 +1,5 @@
+import cors from 'cors';
+import 'dotenv/config';
 import express from 'express';
 import users from './route/user.js';
 const app=express();
@@ -13,6 +15,21 @@ const myLogger=function(req,res,next){
 app.listen(port,()=>{
     console.log(`Server is listening at port ${port}`);
 })
+
+app.use(
+  cors({
+    origin:process.env.FE_ORIGIN,
+    //
+    //////////// Optional
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type"],
+  }),
+);
+
+
+//to parse json body
+app.use(express.json());
+
 
 app.use(myLogger);
 app.use('/user',users);
