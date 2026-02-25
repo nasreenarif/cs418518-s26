@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { connection } from "../database/connection.js";
+import { sendEmail } from '../helper/sendmail.js';
 import { comparePassword, hashPassword } from "../helper/util.js";
 const user = Router();
 
@@ -83,7 +84,7 @@ user.post("/", async (req, res) => {
             });
         }
 
-        const hashedPassword=hashPassword(u_password);
+        const hashedPassword = hashPassword(u_password);
 
 
         const [result] = await connection.execute(
@@ -240,7 +241,7 @@ user.post("/login", async (req, res) => {
 
         // 3) Password check (PLAIN TEXT version - for class demo only)
         // if (userRecord.u_password !== u_password) {
-           if (!comparePassword(u_password,userRecord.u_password)){  //changes after hashed password explanation
+        if (!comparePassword(u_password, userRecord.u_password)) {  //changes after hashed password explanation
             return res.status(401).json({
                 status: 401,
                 message: "Invalid email or password",
@@ -252,9 +253,113 @@ user.post("/login", async (req, res) => {
         const { u_password: _, ...safeUser } = userRecord;
         // const { u_password:_, u_is_admin,u_is_verified, ...safeUser } = userRecord;
 
+
+        // 5) Generate OTP and store in DB (5 min expiry)
+        const otp = Math.floor(100000 + Math.random() * 900000).toString();
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
+
+        await connection.execute(
+            `
+      INSERT INTO email_otp (email, otp, expires_at)
+      VALUES (?, ?, ?)
+      ON DUPLICATE KEY UPDATE
+        otp = VALUES(otp),
+        expires_at = VALUES(expires_at)
+      `,
+            [u_email, otp, expiresAt]
+        );
+
+        // 6) Send OTP via email
+        const subject = "Your Login OTP";
+        const body = `
+      <h2>Login Verification</h2>
+      <p>Your OTP is:</p>
+      <h1 style="letter-spacing:2px;">${otp}</h1>
+      <p>This OTP will expire in 5 minutes.</p>
+    `;
+
+        sendEmail(u_email, subject, body);
+
+
         return res.status(200).json({
             status: 200,
-            message: "Login successful",
+            // message: "Login successful",
+            message: "OTP sent to your email. Please verify to complete login.", // changes after 2FA  // 7) Tell frontend OTP is required now
+            data: safeUser,
+        });
+    } catch (err) {
+        return res.status(500).json({
+            status: 500,
+            message: err.message,
+            data: null,
+        });
+    }
+});
+
+//======================== 
+//Verify Login OTP (Step 2: verify -> login complete)
+//========================
+user.post("/verify-login-otp", async (req, res) => {
+    try {
+        const { email, otp } = req.body || {};
+
+        if (!email || !otp) {
+            return res.status(400).json({
+                status: 400,
+                message: "Email and OTP are required",
+                data: null,
+            });
+        }
+
+        const [rows] = await connection.execute(
+            `SELECT otp, expires_at FROM email_otp WHERE email = ? LIMIT 1`,
+            [email]
+        );
+
+        if (rows.length === 0) {
+            return res.status(400).json({
+                status: 400,
+                message: "OTP not found. Please request again.",
+                data: null,
+            });
+        }
+
+        const record = rows[0];
+        const expiresAt = new Date(record.expires_at);
+
+        if (Date.now() > expiresAt.getTime()) {
+            await connection.execute(`DELETE FROM email_otp WHERE email = ?`, [email]);
+            return res.status(400).json({
+                status: 400,
+                message: "OTP expired. Please request again.",
+                data: null,
+            });
+        }
+
+        if (record.otp !== otp) {
+            return res.status(400).json({
+                status: 400,
+                message: "Invalid OTP.",
+                data: null,
+            });
+        }
+
+        // OTP correct -> delete (one-time use)
+        await connection.execute(`DELETE FROM email_otp WHERE email = ?`, [email]);
+
+        // Fetch user and return safe user
+        const [userRows] = await connection.execute(
+            "SELECT * FROM user_info WHERE u_email = ? LIMIT 1",
+            [email]
+        );
+
+        const userRecord = userRows[0];
+        const { u_password: _, ...safeUser } = userRecord;
+
+        return res.status(200).json({
+            status: 200,
+            message: "OTP verified. Login complete.",
+            otp_required: false,
             data: safeUser,
         });
     } catch (err) {
