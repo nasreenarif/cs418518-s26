@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { connection } from "../database/connection.js";
+import { comparePassword, hashPassword } from "../helper/util.js";
 const user = Router();
 
 
@@ -82,6 +83,9 @@ user.post("/", async (req, res) => {
             });
         }
 
+        const hashedPassword=hashPassword(u_password);
+
+
         const [result] = await connection.execute(
             `INSERT INTO user_info 
             (u_first_name, u_last_name, u_email, u_password, u_is_verified, u_is_admin)
@@ -90,7 +94,8 @@ user.post("/", async (req, res) => {
                 u_first_name,
                 u_last_name,
                 u_email,
-                u_password,
+                // u_password,//raw password
+                hashedPassword, //hashed password 
                 u_is_verified ?? 0,
                 u_is_admin ?? 0
             ]
@@ -217,8 +222,10 @@ user.post("/login", async (req, res) => {
 
         // 2) Query user by email
         const [rows] = await connection.execute(
-            "SELECT * FROM user_info WHERE u_email = ? and u_password=? LIMIT 1",
-            [u_email, u_password]
+            // "SELECT * FROM user_info WHERE u_email = ? and u_password=? LIMIT 1",
+            "SELECT * FROM user_info WHERE u_email = ? LIMIT 1", //changes after hashed password explanation
+            // [u_email, u_password] 
+            [u_email] //changes after hashed password explanation
         );
 
         if (rows.length === 0) {
@@ -232,7 +239,8 @@ user.post("/login", async (req, res) => {
         const userRecord = rows[0];
 
         // 3) Password check (PLAIN TEXT version - for class demo only)
-        if (userRecord.u_password !== u_password) {
+        // if (userRecord.u_password !== u_password) {
+           if (!comparePassword(u_password,userRecord.u_password)){  //changes after hashed password explanation
             return res.status(401).json({
                 status: 401,
                 message: "Invalid email or password",
