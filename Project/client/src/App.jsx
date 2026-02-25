@@ -4,6 +4,8 @@ import Dashboard from "./Dashboard.jsx";
 import Header from "./Header.jsx";
 import Login from "./Login.jsx";
 import Signup from "./Signup.jsx";
+import VerifyOtp from "./VerifyOtp.jsx";
+
 function App() {
 
   return (
@@ -35,6 +37,7 @@ function App() {
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />        
             <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/verify-otp" element={<VerifyOtp />} />
           </Routes>
         </main>
       </Router>

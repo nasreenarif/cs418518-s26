@@ -22,11 +22,11 @@ export default function Login() {
     setSubmitted(true);
     setError("");
 
-    // Basic client-side validation
     if (!enteredEmail.includes("@")) {
       setError("Please enter a valid email.");
       return;
     }
+
     if (enteredPassword.trim().length < 8) {
       setError("Password must be at least 8 characters.");
       return;
@@ -35,14 +35,14 @@ export default function Login() {
     setLoading(true);
 
     try {
+      // Step 1: Call existing login API (NO CHANGE to backend)
       const res = await fetch(import.meta.env.VITE_API_KEY + "user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // send the keys your backend expects
         body: JSON.stringify({
           u_email: enteredEmail,
           u_password: enteredPassword,
-        })        
+        }),
       });
 
       const json = await res.json().catch(() => ({}));
@@ -52,20 +52,15 @@ export default function Login() {
         return;
       }
 
-      // your backend response is: { status, message, result: user }
-      const user = json.data ?? null;
+      // Step 2: Store email temporarily
+      localStorage.setItem("pendingOtpEmail", enteredEmail);
 
-      if (!user) {
-        setError("Login succeeded but user data was missing.");
-        return;
-      }
+      //  Step 3: Redirect to OTP page
+      // Used after API success
+      // Used inside event handlers
+      // Used conditionally
+      navigate("/verify-otp");
 
-      localStorage.setItem("loggedInUser", JSON.stringify(user));
-
-// Used after API success
-// Used inside event handlers
-// Used conditionally
-      navigate("/dashboard");
     } catch (err) {
       setError(err?.message || "Something went wrong");
     } finally {

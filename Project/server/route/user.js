@@ -285,7 +285,8 @@ user.post("/login", async (req, res) => {
             status: 200,
             // message: "Login successful",
             message: "OTP sent to your email. Please verify to complete login.", // changes after 2FA  // 7) Tell frontend OTP is required now
-            data: safeUser,
+            // data: safeUser,
+            email: u_email
         });
     } catch (err) {
         return res.status(500).json({
