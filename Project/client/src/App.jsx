@@ -3,7 +3,9 @@ import './App.css';
 import Dashboard from "./Dashboard.jsx";
 import Header from "./Header.jsx";
 import Login from "./Login.jsx";
+import RefExample from "./RefExample.jsx";
 import Signup from "./Signup.jsx";
+import StateExample from "./StateExample.jsx";
 import VerifyOtp from "./VerifyOtp.jsx";
 
 function App() {
@@ -38,6 +40,8 @@ function App() {
             <Route path="/signup" element={<Signup />} />        
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/verify-otp" element={<VerifyOtp />} />
+            <Route path="/StateExample" element={<StateExample/>}/>
+            <Route path="/RefExample" element={<RefExample/>}/>
           </Routes>
         </main>
       </Router>
