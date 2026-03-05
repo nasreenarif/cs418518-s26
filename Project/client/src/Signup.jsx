@@ -13,6 +13,8 @@ export default function Signup({ onRegister }) {
   });
 
   const [errors, setErrors] = useState({});
+  const [statusMsg, setStatusMsg] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   function updateField(field, value) {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -22,7 +24,7 @@ export default function Signup({ onRegister }) {
     const e = {};
     if (!form.firstName.trim()) e.firstName = "First name is required";
     if (!form.lastName.trim()) e.lastName = "Last name is required";
-    if (!/^\d{9}$/.test(form.uin)) e.uin = "UIN must be 9 digits";
+    if (!/^\d{9}$/.test(form.uin.trim())) e.uin = "UIN must be 9 digits";
     if (!form.email.includes("@")) e.email = "Valid email required";
     if (form.password.length < 6) e.password = "Minimum 6 characters";
     if (form.password !== form.confirmPassword)
@@ -30,26 +32,62 @@ export default function Signup({ onRegister }) {
     return e;
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
+    setStatusMsg("");
+
     const v = validate();
     setErrors(v);
+    console.log("VALIDATION ERRORS:", v);
+    if (Object.keys(v).length !== 0) return;
 
-    if (Object.keys(v).length === 0) {
-      onRegister({
-        firstName: form.firstName,
-        lastName: form.lastName,
+    setIsSubmitting(true);
+
+    try {
+      const payload = {
+        u_first_name: form.firstName.trim(),
+        u_last_name: form.lastName.trim(),
+        u_email: form.email.trim().toLowerCase(),
+        u_password: form.password,
         uin: form.uin,
-        email: form.email.toLowerCase(),
+      };
+
+      // IMPORTANT: onRegister must return a Promise (fetch/axios)
+      await onRegister(payload);
+
+      setStatusMsg("✅ Signup successful! Check your email for the verification link.");
+
+      // optional: clear form after success
+      setForm({
+        firstName: "",
+        lastName: "",
+        uin: "",
+        email: "",
+        password: "",
+        confirmPassword: "",
       });
 
-      
+      // optional: send to login after 2 seconds
+      // window.location.href = "/login";
+      // or if you use react-router: navigate("/login");
+    } catch (err) {
+      setStatusMsg(
+        "❌ Signup failed. " + (err?.message ? err.message : "Please try again.")
+      );
+    } finally {
+      setIsSubmitting(false);
     }
   }
 
   return (
     <form className="signup-form" onSubmit={handleSubmit}>
       <h3 className="signup-title">Create Account</h3>
+
+      {statusMsg ? (
+        <div style={{ marginBottom: "10px", fontSize: "14px" }}>
+          {statusMsg}
+        </div>
+      ) : null}
 
       <Field label="First Name" error={errors.firstName}>
         <input
@@ -101,11 +139,9 @@ export default function Signup({ onRegister }) {
         />
       </Field>
 
-      <button className="signup-btn" type="submit">
-        Sign Up
+      <button className="signup-btn" type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Signing up..." : "Sign Up"}
       </button>
     </form>
   );
 }
-
-
