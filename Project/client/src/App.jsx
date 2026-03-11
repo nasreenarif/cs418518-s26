@@ -35,13 +35,16 @@ function App() {
       <Router>
         <Header />
         <main>
+         <h1 class="text-3xl font-bold underline">
+    Hello world!
+  </h1>
           <Routes>
             <Route path="/login" element={<Login />} />
-            <Route path="/signup" element={<Signup />} />        
+            <Route path="/signup" element={<Signup />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/verify-otp" element={<VerifyOtp />} />
-            <Route path="/StateExample" element={<StateExample/>}/>
-            <Route path="/RefExample" element={<RefExample/>}/>
+            <Route path="/StateExample" element={<StateExample />} />
+            <Route path="/RefExample" element={<RefExample />} />
           </Routes>
         </main>
       </Router>

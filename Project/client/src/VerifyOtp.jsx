@@ -39,6 +39,7 @@ export default function VerifyOtp() {
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
+                    credentials:"include",
                     body: JSON.stringify({
                         email,
                         otp: cleanedOtp,

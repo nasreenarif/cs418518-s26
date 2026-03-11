@@ -43,6 +43,7 @@ export default function Login() {
           u_email: enteredEmail,
           u_password: enteredPassword,
         }),
+        credentials:"include"
       });
 
       const json = await res.json().catch(() => ({}));

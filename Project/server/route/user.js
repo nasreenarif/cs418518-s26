@@ -4,7 +4,46 @@ import { sendEmail } from '../helper/sendmail.js';
 import { comparePassword, hashPassword } from "../helper/util.js";
 const user = Router();
 
+user.get("/userprofile", (req, res) => {
+    console.log(req.session);
+    console.log(req.session.isAuthenticated);
+    if (!req.session || !req.session.isAuthenticated) {
+        return res.status(401).json({
+            status: 401,
+            message: "Unauthorized",
+            data: null,
+        });
+    }
 
+    res.json({
+        status: 200,
+        message: "User fetched successfully",
+        data: req.session.user,
+    });
+});
+
+// =======================
+// LOGOUT API
+// =======================
+user.post("/logout", (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.status(500).json({
+                status: 500,
+                message: "Logout failed",
+                data: null
+            });
+        }
+        // remove session cookie from browser
+        res.clearCookie("connect.sid");
+
+        return res.status(200).json({
+            status: 200,
+            message: "Logged out successfully",
+            data: null
+        });
+    });
+});
 
 // =======================
 // GET ALL USERS
@@ -59,7 +98,6 @@ user.get("/:id", async (req, res) => {
         });
     }
 });
-
 
 
 // =======================
@@ -357,6 +395,21 @@ user.post("/verify-login-otp", async (req, res) => {
         const userRecord = userRows[0];
         const { u_password: _, ...safeUser } = userRecord;
 
+        // Create session after successful OTP verification
+        req.session.user = {
+            u_id: userRecord.u_id,
+            u_email: userRecord.u_email,
+            u_first_name: userRecord.u_first_name,
+            u_last_name: userRecord.u_last_name,
+            u_is_admin: userRecord.u_is_admin,
+            u_is_verified: userRecord.u_is_verified,
+        };
+
+        req.session.isAuthenticated = true;
+
+        console.log(req.session.user)
+        console.log(req.session.isAuthenticated)
+
         return res.status(200).json({
             status: 200,
             message: "OTP verified. Login complete.",
@@ -371,7 +424,6 @@ user.post("/verify-login-otp", async (req, res) => {
         });
     }
 });
-
 
 
 
