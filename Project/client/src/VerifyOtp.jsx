@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import "./Login.css"; // reuse your existing styles
 
 export default function VerifyOtp() {
     const [otp, setOtp] = useState("");
@@ -39,7 +38,7 @@ export default function VerifyOtp() {
                 {
                     method: "POST",
                     headers: { "Content-Type": "application/json" },
-                    credentials:"include",
+                    credentials: "include",
                     body: JSON.stringify({
                         email,
                         otp: cleanedOtp,
@@ -60,7 +59,6 @@ export default function VerifyOtp() {
                 return;
             }
 
-            // ✅ Now user is authenticated → store and redirect
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             localStorage.removeItem("pendingOtpEmail");
 
@@ -75,49 +73,62 @@ export default function VerifyOtp() {
     const otpNotValid = submitted && !/^\d{6}$/.test(otp.trim());
 
     return (
-        <div id="login">
+        <div className="mx-auto mt-12 w-full max-w-md rounded-2xl border border-gray-200 bg-white p-8 shadow-lg">
             {error && (
-                <div
-                    style={{
-                        background: "#fee",
-                        padding: 10,
-                        borderRadius: 6,
-                        marginBottom: 12,
-                        border: "1px solid #fca5a5",
-                        color: "#991b1b",
-                    }}
-                >
+                <div className="mb-4 rounded-lg border border-red-300 bg-red-50 px-4 py-3 text-sm text-red-800">
                     {error}
                 </div>
             )}
 
             <form onSubmit={handleVerifyOtp}>
-                <div className="controls">
-                    <p>
-                        <label>Email</label>
-                        <input type="email" value={email} disabled />
+                <div className="flex flex-col gap-4">
+                    <p className="m-0">
+                        <label className="mb-2 block text-sm font-semibold text-gray-700">
+                            Email
+                        </label>
+                        <input
+                            type="email"
+                            value={email}
+                            disabled
+                            className="w-full rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-sm text-gray-500 outline-none"
+                        />
                     </p>
 
-                    <p>
-                        <label className={otpNotValid ? "invalid" : ""}>OTP</label>
+                    <p className="m-0">
+                        <label
+                            className={`mb-2 block text-sm font-semibold ${otpNotValid ? "text-red-600" : "text-gray-700"
+                                }`}
+                        >
+                            OTP
+                        </label>
                         <input
                             type="text"
                             inputMode="numeric"
                             maxLength={6}
                             value={otp}
-                            className={otpNotValid ? "invalid" : ""}
                             onChange={(e) => setOtp(e.target.value)}
                             placeholder="Enter 6-digit OTP"
+                            className={`w-full rounded-xl px-4 py-3 text-sm outline-none transition ${otpNotValid
+                                    ? "border border-red-600 bg-red-50 text-gray-900 focus:ring-4 focus:ring-red-100"
+                                    : "border border-gray-300 bg-white text-gray-900 focus:border-blue-600 focus:ring-4 focus:ring-blue-100"
+                                }`}
                         />
                     </p>
                 </div>
 
-                <div className="actions">
-                    <Link to="/login" className="button" style={{ textAlign: "center" }}>
+                <div className="mt-6 flex gap-3 max-sm:flex-col">
+                    <Link
+                        to="/login"
+                        className="flex-1 rounded-xl border border-gray-300 bg-gray-50 px-4 py-3 text-center text-sm font-semibold text-gray-900 transition hover:bg-gray-100"
+                    >
                         Back to Login
                     </Link>
 
-                    <button className="button" type="submit" disabled={loading}>
+                    <button
+                        className="flex-1 rounded-xl bg-blue-600 px-4 py-3 text-sm font-semibold text-gray-900 transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-blue-300"
+                        type="submit"
+                        disabled={loading}
+                    >
                         {loading ? "Verifying..." : "Verify OTP"}
                     </button>
                 </div>
