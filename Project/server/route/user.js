@@ -414,7 +414,7 @@ user.post("/verify-login-otp", async (req, res) => {
             status: 200,
             message: "OTP verified. Login complete.",
             otp_required: false,
-            data: safeUser,
+            data: null,
         });
     } catch (err) {
         return res.status(500).json({

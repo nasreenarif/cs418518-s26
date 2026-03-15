@@ -53,14 +53,14 @@ export default function VerifyOtp() {
                 return;
             }
 
-            const user = json?.data ?? null;
-            if (!user) {
-                setError("OTP verified but user data was missing.");
-                return;
-            }
+            // const user = json?.data ?? null;
+            // if (!user) {
+            //     setError("OTP verified but user data was missing.");
+            //     return;
+            // }
 
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-            localStorage.removeItem("pendingOtpEmail");
+            // localStorage.setItem("loggedInUser", JSON.stringify(user));
+            // localStorage.removeItem("pendingOtpEmail");
 
             navigate("/dashboard");
         } catch (err) {
