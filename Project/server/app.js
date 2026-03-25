@@ -41,7 +41,7 @@ app.use(
         saveUninitialized: false,
         cookie: {
             httpOnly: true,   // JS cannot read cookie
-            secure: false,    // true in production with HTTPS
+            secure: true,    // true in production with HTTPS
             sameSite: "lax",
             maxAge: 1000 * 60 * 60, // 1 hour
         },
