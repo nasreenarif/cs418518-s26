@@ -23,7 +23,7 @@ app.listen(port, () => {
 //to parse json body
 app.use(express.json());
 app.use(cookieParser());
-
+app.set("trust proxy", 1);
 app.use(
     cors({
         origin: process.env.FE_ORIGIN,
