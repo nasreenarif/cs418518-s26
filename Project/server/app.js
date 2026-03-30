@@ -34,6 +34,8 @@ app.use(
     }),
 );
 
+app.set("trust proxy", 1);
+
 app.use(
     session({
         secret: process.env.SESSION_SECRET || "secretkey",
@@ -41,8 +43,8 @@ app.use(
         saveUninitialized: false,
         cookie: {
             httpOnly: true,   // JS cannot read cookie
-            secure: false,    // true in production with HTTPS
-            sameSite: "lax",
+            secure: true,    // true in production with HTTPS
+            sameSite: "none", // change from lax to none for deployment
             maxAge: 1000 * 60 * 60, // 1 hour
         },
     })
