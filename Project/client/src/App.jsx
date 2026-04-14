@@ -35,9 +35,9 @@ function App() {
       <Router>
         <Header />
         <main>
-         <h1 class="text-3xl font-bold underline">
-    Hello world!
-  </h1>
+          <h1 class="text-3xl font-bold underline">
+            Hello world!
+          </h1>
           <Routes>
             <Route path="/login" element={<Login />} />
             <Route path="/signup" element={<Signup />} />
