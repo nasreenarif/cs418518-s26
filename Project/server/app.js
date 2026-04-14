@@ -3,6 +3,7 @@ import cors from 'cors';
 import 'dotenv/config';
 import express from 'express';
 import session from "express-session";
+import openAIRouter from './route/openAI.js';
 import users from './route/user.js';
 const app = express();
 const port = 3000;
@@ -53,7 +54,7 @@ app.use(
 
 app.use(myLogger);
 app.use('/user', users);
-
+app.use('/openAI', openAIRouter);
 
 app.get('/', (req, res) => {
     res.send('Hello World!');

@@ -1,5 +1,6 @@
 import { Route, BrowserRouter as Router, Routes } from "react-router-dom";
 import './App.css';
+import Chatbot from "./Chatbot.jsx";
 import Dashboard from "./Dashboard.jsx";
 import Header from "./Header.jsx";
 import Login from "./Login.jsx";
@@ -36,7 +37,7 @@ function App() {
         <Header />
         <main>
           <h1 class="text-3xl font-bold underline">
-            Hello world!
+            Course Advising Portal!
           </h1>
           <Routes>
             <Route path="/login" element={<Login />} />
@@ -45,6 +46,7 @@ function App() {
             <Route path="/verify-otp" element={<VerifyOtp />} />
             <Route path="/StateExample" element={<StateExample />} />
             <Route path="/RefExample" element={<RefExample />} />
+            <Route path="/chatbot" element={<Chatbot />} />
           </Routes>
         </main>
       </Router>
