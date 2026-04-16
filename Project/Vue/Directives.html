@@ -1,0 +1,32 @@
+<div id="app">
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <!-- v-show -->
+    <h3 v-show="isVisible">This heading is shown using v-show</h3>
+    <!-- v-if / v-else-if / v-else -->
+    <p v-if="score >= 90">Grade: A</p>
+    <p v-else-if="score >= 80">Grade: B</p>
+    <p v-else-if="score >= 70">Grade: C</p>
+    <p v-else>Grade: F</p>
+    <button @click="toggleVisibility">
+        Toggle v-show Element
+    </button>
+
+    <button @click="increaseScore">
+        Increase Score
+    </button>
+</div>
+<script>
+    Vue.createApp({
+        setup() {
+            const isVisible = Vue.ref(true);
+            const score = Vue.ref(65);
+            function toggleVisibility() {
+                isVisible.value = !isVisible.value;
+            }
+            function increaseScore() {
+                score.value += 5;
+            }
+            return { isVisible, score, toggleVisibility, increaseScore };
+        }
+    }).mount("#app");
+</script>

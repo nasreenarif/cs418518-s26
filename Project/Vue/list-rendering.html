@@ -1,0 +1,17 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="app">
+    <h3>Fruit List</h3>
+    <ul>
+        <li v-for="fruit in fruits" :key="fruit">
+            {{ fruit }}
+        </li>
+    </ul>
+</div>
+<script>
+    Vue.createApp({
+        setup() {
+            const fruits = Vue.ref(["Apple", "Banana", "Mango", "Orange"]);
+            return { fruits };
+        }
+    }).mount("#app");
+</script>

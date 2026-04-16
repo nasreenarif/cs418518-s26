@@ -1,0 +1,40 @@
+<script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+<div id="app">
+
+    <!-- v-bind: bind class and style dynamically -->
+    <p :class="statusClass" :style="{ fontSize: textSize + 'px' }">
+        Status: {{ statusMessage }}
+    </p>
+
+    <!-- v-model: two-way data binding -->
+    <input v-model="statusMessage" placeholder="Type a status message">
+
+    <input v-model="textSize" type="number" placeholder="Font size">
+
+    <!-- v-on: listen to click events -->
+    <button @click="toggleStatus">
+        Toggle Status Class
+    </button>
+
+</div>
+
+<script>
+    Vue.createApp({
+        setup() {
+            const statusMessage = Vue.ref("Active");
+            const textSize = Vue.ref(18);
+            const isActive = Vue.ref(true);
+
+            const statusClass = Vue.computed(() =>
+                isActive.value ? "active-text" : "inactive-text"
+            );
+
+            function toggleStatus() {
+                isActive.value = !isActive.value;
+            }
+
+            return { statusMessage, textSize, isActive, statusClass, toggleStatus };
+        }
+    }).mount("#app");
+
+</script>
